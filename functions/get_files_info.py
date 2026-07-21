@@ -1,4 +1,5 @@
 import os
+from dataclasses import dataclass
 
 
 class InvalidPath(Exception):
@@ -11,6 +12,12 @@ class InvalidPath(Exception):
 
 
 def get_files_info(working_directory: str, directory: str = ".") -> str:
+    output = ""
+    if directory != ".":
+        output += f"Result for '{directory}' directory:\n"
+    else:
+        output += f"Result for current directory:\n"
+
     try:
         working_dir_abs = os.path.abspath(working_directory)
 
@@ -27,8 +34,13 @@ def get_files_info(working_directory: str, directory: str = ".") -> str:
         if not os.path.isdir(target_dir):
             raise InvalidPath(f'"{directory}" is not a directory')
 
-        return f'Success: "{directory}" is within the working directory'
+        for file in os.listdir(target_dir):
+            file_path = os.path.join(target_dir, file)
+            output += f"  - {file}: file_size={os.path.getsize(file_path)} bytes, is_dir={os.path.isdir(file_path)}\n"
+
     except InvalidPath as error:
-        return f"Error: {error}"
+        output += f"  Error: {error}"
     except Exception as error:
-        return f"Error: {error}"
+        output += f"  Error: {error}"
+
+    return output
