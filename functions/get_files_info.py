@@ -1,14 +1,6 @@
 import os
-from dataclasses import dataclass
 
-
-class InvalidPath(Exception):
-    def __init__(self, message):
-        self.message = message
-        super().__init__(self.message)
-
-    def __str__(self):
-        return f"{self.message}"
+from functions.errors import InvalidPath
 
 
 def get_files_info(working_directory: str, directory: str = ".") -> str:
